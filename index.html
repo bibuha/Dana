@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>rich bot demo</title>
+    <script src='//whephiwums.com/sdk.js' data-zone='8991600' data-sdk='show_8991600'></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background: #F8FAFC;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            padding: 20px;
+        }
+        .header {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .description {
+            color: #4B5563;
+            margin-bottom: 20px;
+        }
+        .account-info {
+            background: #E0F2FE;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: left;
+            max-width: 400px;
+            margin: 0 auto 20px auto;
+        }
+        .account-info p {
+            margin: 5px 0;
+        }
+        .highlight {
+            color: #16A34A;
+            font-weight: bold;
+        }
+        .button {
+            display: block;
+            width: 90%;
+            max-width: 400px;
+            margin: 10px auto;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            cursor: pointer;
+        }
+        .btn-primary {
+            background: #3B82F6;
+            color: white;
+        }
+        .btn-secondary {
+            background: #6B7280;
+            color: white;
+        }
+        .footer {
+            margin-top: 20px;
+            color: #9CA3AF;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>rich bot</h2>
+        </div>
+        <p class="description">hgw rich bot</p>
+
+        <div class="account-info">
+            <p>Total Ditonton: <span class="highlight" id="ads-watched">0</span></p>
+        </div>
+
+        <button class="button btn-primary" onclick="rich()">rich</button>
+        <button class="button btn-secondary">rich</button>
+        <button class="button btn-secondary">rich</button>
+        <button class="button btn-secondary">rich</button>
+
+        <div class="footer">rich bot 1.1</div>
+    </div>
+
+    <script>
+        let totalDitonton = 0;
+
+        function rich() {
+            if (typeof show_8991600 === 'function') {
+                show_8991600().then(() => {
+                    totalDitonton++;
+                    document.getElementById('ads-watched').innerText = `ads watched: ${totalDitonton}`;
+                }).catch((error) => {
+                    console.error('Error menampilkan iklan:', error);
+                });
+            } else {
+                console.error('Fungsi show_8991600 tidak tersedia.');
+            }
+        }
+    </script>
+</body>
+</html>
+
+
