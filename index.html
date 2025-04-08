@@ -607,14 +607,14 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.5);
+    background: none;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
 .modal-content {
-    background: rgba(0, 0, 0, 0.85);
+    background: none;
     padding: 30px;
     border-radius: 10px;
     text-align: center;
@@ -638,16 +638,18 @@ body {
 /* Container Roulette */
 .roulette-container {
     position: relative;
-    width: 300px;
-    height: 300px;
-    margin: 50px auto;
+    width: 80vw; /* maksimal 80% dari lebar layar */
+    max-width: 300px;
+    height: 80vw;
+    max-height: 300px;
+    margin: 20px auto;
 }
 
 /* Roda Roulette */
 .roulette {
     position: relative;
-    width: 300px; /* Sesuaikan ukuran roda */
-    height: 300px;
+    width: 100%; /* Sesuaikan ukuran roda */
+    height: 100%;
     border-radius: 50%;
     border: 8px solid #444;
     background: conic-gradient(
@@ -1687,7 +1689,7 @@ function openRoulette() {
  let soundEffect = new Audio("openroulette.mp3"); // Muat file suara
     soundEffect.play(); // Putar suara saat roulette dibuka
 
-    document.getElementById("rouletteModal").style.display = "block";
+    document.getElementById("rouletteModal").style.display = "flex";
     checkReset();
     updateBalance(0);
 }
