@@ -614,13 +614,15 @@ body {
 }
 
 .modal-content {
-    background: rgba(0, 0, 0, 0.85); /* Warna hitam dengan transparansi */
+    background: rgba(0, 0, 0, 0.85);
     padding: 30px;
     border-radius: 10px;
     text-align: center;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    position: relative;
-    top: 90px; /* Menurunkan posisi modal */
+    max-height: 90vh;
+    overflow-y: auto;
+    width: 90%;
+    max-width: 360px;
 }
 #rouletteModal {
     display: none; /* Sembunyikan roulette saat pertama kali halaman dimuat */
