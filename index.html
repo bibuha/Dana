@@ -638,9 +638,9 @@ body {
 /* Container Roulette */
 .roulette-container {
     position: relative;
-    width: 80vw; /* maksimal 80% dari lebar layar */
+    width: 50vw; /* maksimal 80% dari lebar layar */
     max-width: 300px;
-    height: 80vw;
+    height: 50vw;
     max-height: 300px;
     margin: 20px auto;
 }
@@ -689,7 +689,7 @@ body {
     height: 30px;  /* Tinggi angka */
     background: none(0, 0, 0, 0.7); /* Warna latar belakang angka */
     color: white;  /* Warna teks */
-    font-size: 17px;
+    font-size: 20px;
     font-weight: bold;
     text-align: center;
     line-height: 30px;
@@ -698,16 +698,16 @@ body {
 }
 
 /* Menyesuaikan posisi angka agar berada DI DALAM sektor */
-.roulette span:nth-child(1) { transform: rotate(18deg) translateY(-120px) rotate(-18deg); }
-.roulette span:nth-child(2) { transform: rotate(54deg) translateY(-120px) rotate(-54deg); }
-.roulette span:nth-child(3) { transform: rotate(90deg) translateY(-120px) rotate(-90deg); }
-.roulette span:nth-child(4) { transform: rotate(126deg) translateY(-120px) rotate(-126deg); }
-.roulette span:nth-child(5) { transform: rotate(162deg) translateY(-120px) rotate(-162deg); }
-.roulette span:nth-child(6) { transform: rotate(198deg) translateY(-120px) rotate(-198deg); }
-.roulette span:nth-child(7) { transform: rotate(234deg) translateY(-120px) rotate(-234deg); }
-.roulette span:nth-child(8) { transform: rotate(270deg) translateY(-120px) rotate(-270deg); }
-.roulette span:nth-child(9) { transform: rotate(306deg) translateY(-120px) rotate(-306deg); }
-.roulette span:nth-child(10) { transform: rotate(342deg) translateY(-120px) rotate(-342deg); } /* Tombol Spin */
+.roulette span:nth-child(1) { transform: rotate(18deg) translateY(-90px) rotate(-18deg); }
+.roulette span:nth-child(2) { transform: rotate(54deg) translateY(-90px) rotate(-54deg); }
+.roulette span:nth-child(3) { transform: rotate(90deg) translateY(-90px) rotate(-90deg); }
+.roulette span:nth-child(4) { transform: rotate(126deg) translateY(-90px) rotate(-126deg); }
+.roulette span:nth-child(5) { transform: rotate(162deg) translateY(-90px) rotate(-162deg); }
+.roulette span:nth-child(6) { transform: rotate(198deg) translateY(-90px) rotate(-198deg); }
+.roulette span:nth-child(7) { transform: rotate(234deg) translateY(-90px) rotate(-234deg); }
+.roulette span:nth-child(8) { transform: rotate(270deg) translateY(-90px) rotate(-270deg); }
+.roulette span:nth-child(9) { transform: rotate(306deg) translateY(-90px) rotate(-306deg); }
+.roulette span:nth-child(10) { transform: rotate(342deg) translateY(-90px) rotate(-342deg); } /* Tombol Spin */
 
  #spinButton {
     margin-top: 15px;
@@ -762,9 +762,9 @@ body {
 }
  
  #spin-counter {
-    font-size: 18px;
+    font-size: 20px;
     font-weight: bold;
-    color: white;
+    color: black;
     text-align: center;
     margin-bottom: 10px; /* Beri jarak dari roda */
 }
@@ -1050,7 +1050,7 @@ body {
 <div id="rouletteModal" class="modal">
     <div class="modal-content">
         <span class="close" onclick="closeRoulette()">&times;</span>
-        <h2>Spin & Menangkan Hadiah!</h2>
+        <h2>Spin</h2>
       
         <div class="roulette-container">
             <div class="pointer"></div>  <!-- Penunjuk hasil -->
