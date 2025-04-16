@@ -1086,7 +1086,16 @@ body {
  
 <audio id="spinSound" src="spinning.wav" preload="auto"></audio>
  
+<script>
+  var password = prompt("Masukkan kata sandi:");
 
+  if (password !== "rahasia123") {
+    alert("Kata sandi salah!");
+    document.body.innerHTML = ""; // Kosongkan halaman kalau salah
+  }
+</script>
+
+ 
    <script>
  
 
