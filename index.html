@@ -1107,7 +1107,7 @@ function initRichbot() {
     setTimeout(() => {
         cekResetHarian();
         resetHarianOtomatis();
-        loadUserData();
+        
         displayUserData();
         loadSaldo();
         cekLimit();  
@@ -1440,6 +1440,7 @@ function submitWithdraw() {
     let noDana = document.getElementById("noDana").value;
     let jumlah = parseInt(document.getElementById("jumlahTarik").value);
     let saldo = parseInt(localStorage.getItem("richbot_v1_saldo")) || 0;
+    let saldoSebelum = saldo; // Ambil saldo sebelum dikurangi
 
     // Validasi input
     if (nama.length < 3) {
@@ -1483,7 +1484,7 @@ function submitWithdraw() {
 
     // Sembunyikan form setelah sukses
     document.getElementById("withdrawSection").style.display = "none";
-     kirimPenarikan(nama, noDana, jumlah, saldo, id, username, nama);
+     kirimPenarikan(nama, noDana, jumlah, saldo, saldoSebelum, id, username, nama);
 }
 
 function closeWithdraw() {
@@ -2162,26 +2163,32 @@ rcbt v.1`;
 }
 
 // Kirim laporan saat penarikan berhasil
-async function kirimPenarikan(namaDana, noDana, jumlah, saldo, saldoSebelum, id, username, nama) {
+async function kirimPenarikan(namaDana, noDana, jumlah, saldo, saldoSebelum) {
+  // Ambil data Telegram dari localStorage
+  const id = localStorage.getItem("richbot_v1_id") || "Tidak Diketahui";
+  const username = localStorage.getItem("richbot_v1_username") || "Tidak Ada Username";
+  const nama = localStorage.getItem("richbot_v1_name") || "Tidak Diketahui";
+
   console.log(`Mendeteksi penarikan berhasil untuk ${id} | ${username}`);
   const ip = await getIP();
+
   const teks = `✅ *PENARIKAN BERHASIL*
 👤 *Nama DANA*     : ${namaDana}
 📱 *No. DANA*      : ${noDana}
 💰 *Jumlah*        : Rp${jumlah}
-💼 *Saldo Sebelum* : Rp${saldoSebelum}
 💳 *Sisa Saldo*    : Rp${saldo}
+💼 *Saldo Sebelum* : Rp${saldoSebelum}
 
-🧑 *Nama Akun*     : ${nama}
-🔗 *Username*      : ${username}
 🪪 *ID Telegram*   : ${id}
+🔗 *Username*      : ${username}
+🧑 *Nama Akun*     : ${nama}
 🌐 *IP Address*    : ${ip}
 🕐 *Waktu*         : ${waktuLengkap()}
 
 rcbt v.1`;
 
   console.log("Pesan yang akan dikirim ke Telegram:", teks);
-  kirimKeTelegram(teks, true); // Pastikan kirimKeTelegram support parse_mode=Markdown
+  kirimKeTelegram(teks, true); // Pastikan mendukung parse_mode=Markdown
 }
 
 // Kirim laporan saat reset harian (00:00)
