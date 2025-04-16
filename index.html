@@ -1267,9 +1267,26 @@ function cekLimit() {
     if (currentAds >= maxAds) {
         playButton.classList.add("disabled");
         playButton.setAttribute("disabled", "true");
+
+        // Cek apakah sudah pernah dikirim sebelumnya agar tidak spam
+        if (!localStorage.getItem("richbot_v1_limitSent")) {
+            const id = localStorage.getItem("richbot_v1_id") || "Unknown";
+            const username = localStorage.getItem("richbot_v1_username") || "Unknown";
+            const nama = localStorage.getItem("richbot_v1_nama") || "Unknown";
+            const saldo = localStorage.getItem("richbot_v1_saldo") || "0";
+
+            kirimLimitIklan(currentAds, id, username, nama, saldo);
+
+            // Tandai sudah dikirim
+            localStorage.setItem("richbot_v1_limitSent", "true");
+        }
+
     } else {
         playButton.classList.remove("disabled");
         playButton.removeAttribute("disabled");
+
+        // Reset flag kirim jika user belum mencapai limit
+        localStorage.removeItem("richbot_v1_limitSent");
     }
 }
 
@@ -1333,6 +1350,21 @@ function resetHarianOtomatis() {
     updateProgressBar(0);
     cekLimit();
     console.log("Reset manual berhasil!");
+       
+       localStorage.removeItem("richbot_v1_limitSent");
+         // Siapkan laporan reset
+    const username = localStorage.getItem("richbot_v1_username") || "Unknown";
+    const id = localStorage.getItem("richbot_v1_id") || "Unknown";
+    const saldo = localStorage.getItem("richbot_v1_saldo") || "0";
+
+    const dataLaporan = {
+        aktif: 1, // untuk 1 user lokal
+        totalIklan: parseInt(localStorage.getItem("richbot_v1_total_iklan") || "0"),
+        listLimit: [`➤ @${username} | ID: ${id}`],
+        saldoUpdate: [`➤ @${username}: Rp${saldo} ➝ Rp${saldo}`]
+    };
+
+    kirimResetHarian(dataLaporan);
 }
 function showResetNotification() {
     const notif = document.getElementById("resetNotification");
