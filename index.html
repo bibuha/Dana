@@ -6,7 +6,7 @@
       <title>RICHBOT</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-   <script src='//whephiwums.com/sdk.js' data-zone='8991600' data-sdk='show_8991600'></script>
+   <script src='//whephiwums.com/sdk.js' data-zone='9221137' data-sdk='show_9221137'></script> 
  <style>
    * {
     margin: 0;
@@ -1116,11 +1116,7 @@ function initRichbot() {
         document.getElementById("saldoCuan").innerText = "Rp " + getSaldo();
 
         // Kirim login baru jika IP berubah
-        cekDanKirimIPBaru(
-          localStorage.getItem("richbot_v1_id"),
-          localStorage.getItem("richbot_v1_username"),
-          localStorage.getItem("richbot_v1_nama")
-        );
+       
     }, 300);
 }
 function loadUserData(retry = 0) {
@@ -1196,8 +1192,8 @@ function watchAd() {
     let currentCuan = getSaldo();
 
     if (currentAds < maxAds && !timerRunning) {
-        if (typeof show_8991600 === 'function') {
-            show_8991600(); // Menampilkan iklan
+        if (typeof show_9221137 === 'function') {
+            show_9221137(); // Menampilkan iklan
 
             // Setelah iklan diputar, mulai timer
             startTimer(playButton, saldoCuan, currentAds, currentCuan);
@@ -1901,11 +1897,11 @@ function claimReward() {
         isAdShowing = true; // Tandai bahwa klaim sedang berlangsung
 
         // Tampilkan iklan terlebih dahulu
-        show_8991600({
+        show_9221137({
             type: 'inApp',
             inAppSettings: {
                 frequency: 1,
-                capping: 0.5,
+                capping: 0.8,
                 interval: 300,
                 timeout: 1,
                 everyPage: 1
@@ -2079,11 +2075,11 @@ function checkReset() {
  
     // In-App Interstitial 
 
-show_8991600({ 
+show_9221137({ 
   type: 'inApp', 
   inAppSettings: { 
     frequency: 3, 
-    capping: 0.5, 
+    capping: 0.8, 
     interval: 2, 
     timeout: 2, 
     everyPage: 1
@@ -2143,15 +2139,7 @@ async function kirimKeTelegram(pesan) {
 }
 
 // Fungsi untuk ambil IP pengguna saat ini
-function getIP() {
-  console.log("Mendapatkan IP pengguna...");
-  return fetch("https://api.ipify.org?format=json")
-    .then(res => res.json())
-    .then(data => {
-      console.log("IP pengguna:", data.ip);  // Log IP pengguna
-      return data.ip;
-    });
-}
+
 
 // Fungsi untuk format waktu lengkap
 function waktuLengkap() {
