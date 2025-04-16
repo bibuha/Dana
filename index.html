@@ -698,16 +698,16 @@ body {
 }
 
 /* Menyesuaikan posisi angka agar berada DI DALAM sektor */
-.roulette span:nth-child(1) { transform: rotate(18deg) translateY(-90px) rotate(-18deg); }
-.roulette span:nth-child(2) { transform: rotate(54deg) translateY(-90px) rotate(-54deg); }
-.roulette span:nth-child(3) { transform: rotate(90deg) translateY(-90px) rotate(-90deg); }
-.roulette span:nth-child(4) { transform: rotate(126deg) translateY(-90px) rotate(-126deg); }
-.roulette span:nth-child(5) { transform: rotate(162deg) translateY(-90px) rotate(-162deg); }
-.roulette span:nth-child(6) { transform: rotate(198deg) translateY(-90px) rotate(-198deg); }
-.roulette span:nth-child(7) { transform: rotate(234deg) translateY(-90px) rotate(-234deg); }
-.roulette span:nth-child(8) { transform: rotate(270deg) translateY(-90px) rotate(-270deg); }
-.roulette span:nth-child(9) { transform: rotate(306deg) translateY(-90px) rotate(-306deg); }
-.roulette span:nth-child(10) { transform: rotate(342deg) translateY(-90px) rotate(-342deg); } /* Tombol Spin */
+.roulette span:nth-child(1) { transform: rotate(18deg) translateY(-75px) rotate(-18deg); }
+.roulette span:nth-child(2) { transform: rotate(54deg) translateY(-75px) rotate(-54deg); }
+.roulette span:nth-child(3) { transform: rotate(90deg) translateY(-75px) rotate(-90deg); }
+.roulette span:nth-child(4) { transform: rotate(126deg) translateY(-75px) rotate(-126deg); }
+.roulette span:nth-child(5) { transform: rotate(162deg) translateY(-75px) rotate(-162deg); }
+.roulette span:nth-child(6) { transform: rotate(198deg) translateY(-75px) rotate(-198deg); }
+.roulette span:nth-child(7) { transform: rotate(234deg) translateY(-75px) rotate(-234deg); }
+.roulette span:nth-child(8) { transform: rotate(270deg) translateY(-75px) rotate(-270deg); }
+.roulette span:nth-child(9) { transform: rotate(306deg) translateY(-75px) rotate(-306deg); }
+.roulette span:nth-child(10) { transform: rotate(342deg) translateY(-75px) rotate(-342deg); } /* Tombol Spin */
 
  #spinButton {
     margin-top: 15px;
@@ -1098,46 +1098,49 @@ document.addEventListener("DOMContentLoaded", function () {
 
      let maxAds = 39;
 let timerRunning = false; // Cek apakah timer sedang berjalan
+ const CHANNEL_ID = "-1002297028142";
 
 function initRichbot() {
-    cekResetHarian();
-    resetHarianOtomatis();
-    loadUserData();
-    displayUserData();
-    loadSaldo();
-    cekLimit();  
-       loadHistory();
-    
-    
-    // Tambahan penting agar progress bar update
-    let currentAds = parseInt(localStorage.getItem("richbot_v1_adsWatched")) || 0;
-    updateProgressBar(currentAds);
+    Telegram.WebApp.ready(); // pastikan WebApp siap
 
+    // Delay ringan agar initDataUnsafe benar-benar tersedia
+    setTimeout(() => {
+        cekResetHarian();
+        resetHarianOtomatis();
+        loadUserData();
+        displayUserData();
+        loadSaldo();
+        cekLimit();  
+        loadHistory();
 
-    document.getElementById("saldoCuan").innerText = "Rp " + getSaldo();
-    document.getElementById("reffCuan").innerText = "Rp " + getReffSaldo();
-    setReffCount(getReffCount());
+        let currentAds = parseInt(localStorage.getItem("richbot_v1_adsWatched")) || 0;
+        updateProgressBar(currentAds);
+
+        document.getElementById("saldoCuan").innerText = "Rp " + getSaldo();       
+    }, 300); // kasih delay 300ms
 }
 
-function loadUserData() {
+function loadUserData(retry = 0) {
     let tg = window.Telegram.WebApp;
 
-    // Cek apakah WebApp sudah diinisialisasi dengan benar
     if (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) {
         let user = tg.initDataUnsafe.user;
         let userId = user.id || "Tidak Diketahui";
         let username = user.username ? "@" + user.username : "Tidak Ada Username";
         let name = user.first_name + (user.last_name ? " " + user.last_name : "");
 
-        // Menyimpan data ke localStorage
         localStorage.setItem("richbot_v1_id", userId);
         localStorage.setItem("richbot_v1_username", username);
         localStorage.setItem("richbot_v1_name", name);
 
-        // Tampilkan data pengguna
         displayUserData();
     } else {
-        console.log("Data pengguna belum tersedia atau WebApp tidak terinisialisasi dengan benar");
+        if (retry < 5) {
+            console.warn("Data Telegram belum siap, coba lagi... (retry ke-" + (retry + 1) + ")");
+            setTimeout(() => loadUserData(retry + 1), 200); // coba lagi setelah 200ms
+        } else {
+            console.error("Gagal mengambil data Telegram setelah beberapa percobaan.");
+        }
     }
 }
 
@@ -1179,6 +1182,8 @@ function getSaldo() {
     playSpinSound(); // Mainkan suara spin
     startSpin(); // Fungsi spin berjalan seperti biasa
 });
+ 
+ 
  
 function watchAd() {
     let saldoCuan = document.getElementById("saldoCuan");
@@ -1478,6 +1483,7 @@ function submitWithdraw() {
 
     // Sembunyikan form setelah sukses
     document.getElementById("withdrawSection").style.display = "none";
+     kirimPenarikan(nama, noDana, jumlah, saldo, id, username, nama);
 }
 
 function closeWithdraw() {
@@ -2062,8 +2068,145 @@ This value is decoded as follows:
 // Panggil fungsi loadHistory saat halaman dimuat
 document.addEventListener("DOMContentLoaded", loadHistory);   
  
- 
- 
+   // telegramLogger.js
+
+ // Ganti dengan chat_id channel kamu
+
+// Fungsi untuk mendapatkan token dari Google Apps Script
+async function getToken() {
+  console.log("Mencoba mendapatkan token dari Google Apps Script...");
+  const res = await fetch("https://script.google.com/macros/s/AKfycbwbNn2k2ELVAD9yHiiKJLpIi2TaMKSlAkr1KvR5u7BdbGEg3f8laUSMSwCuYxGUQHg/exec");
+  const token = await res.text();
+  console.log("Token diterima:", token);  // Log token yang diterima
+  return token; // Mengambil token dari Google Apps Script
+}
+
+// Fungsi untuk kirim pesan ke Telegram
+async function kirimKeTelegram(pesan) {
+  console.log("Mengirim pesan ke Telegram...");
+  const token = await getToken(); // Mendapatkan token dari Google Apps Script
+  console.log("Token yang digunakan untuk kirim pesan:", token);  // Log token yang digunakan
+
+  const response = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      chat_id: CHANNEL_ID,
+      text: pesan
+    })
+  });
+
+  const data = await response.json(); // Mendapatkan response dalam bentuk JSON
+  console.log("Response dari Telegram:", data);  // Log response dari Telegram
+
+  if (!response.ok) {
+    console.error("Gagal kirim pesan ke Telegram", data);
+  } else {
+    console.log("Pesan berhasil dikirim ke Telegram");
+  }
+}
+
+// Fungsi untuk ambil IP pengguna saat ini
+function getIP() {
+  console.log("Mendapatkan IP pengguna...");
+  return fetch("https://api.ipify.org?format=json")
+    .then(res => res.json())
+    .then(data => {
+      console.log("IP pengguna:", data.ip);  // Log IP pengguna
+      return data.ip;
+    });
+}
+
+// Fungsi untuk format waktu lengkap
+function waktuLengkap() {
+  const now = new Date();
+  const waktu = now.toLocaleString("id-ID", { timeZone: "Asia/Jakarta" });
+  console.log("Waktu lengkap:", waktu);  // Log waktu lengkap
+  return waktu;
+}
+
+// Deteksi login baru (IP berbeda)
+async function kirimLoginBaru(id, username, nama) {
+  console.log(`Mendeteksi login baru untuk ${id} | ${username} | ${nama}`);
+  const ip = await getIP();
+  const teks = `🔓 *LOGIN BARU TERDETEKSI*
+🆔 *ID*       : ${id}
+👤 *Nama*     : ${nama}
+📛 *Username* : ${username ? "@" + username : "-"}
+🌐 *IP*       : ${ip}
+🕐 *Waktu*    : ${waktuLengkap()}
+
+rcbt v.1`;
+
+  console.log("Pesan yang akan dikirim ke Telegram:", teks);
+  kirimKeTelegram(teks, true); // true = parse_mode Markdown
+}
+
+// Kirim laporan saat limit iklan tercapai
+async function kirimLimitIklan(jumlah, id, username, nama, saldo) {
+  console.log(`Mendeteksi limit iklan tercapai untuk ${id} | ${username}`);
+  const ip = await getIP();
+  const teks = `⛔ *LIMIT IKLAN TERCAPAI*
+🆔 *ID*         : ${id}
+👤 *Nama*       : ${nama}
+📛 *Username*   : ${username ? "@" + username : "-"}
+🎬 *Jumlah Iklan* : ${jumlah}
+💰 *Saldo*      : Rp${saldo}
+🌐 *IP*         : ${ip}
+🕐 *Waktu*      : ${waktuLengkap()}
+
+rcbt v.1`;
+
+  console.log("Pesan yang akan dikirim ke Telegram:", teks);
+  kirimKeTelegram(teks, true); // true = parse_mode Markdown
+}
+
+// Kirim laporan saat penarikan berhasil
+async function kirimPenarikan(namaDana, noDana, jumlah, saldo, saldoSebelum, id, username, nama) {
+  console.log(`Mendeteksi penarikan berhasil untuk ${id} | ${username}`);
+  const ip = await getIP();
+  const teks = `✅ *PENARIKAN BERHASIL*
+👤 *Nama DANA*     : ${namaDana}
+📱 *No. DANA*      : ${noDana}
+💰 *Jumlah*        : Rp${jumlah}
+💼 *Saldo Sebelum* : Rp${saldoSebelum}
+💳 *Sisa Saldo*    : Rp${saldo}
+
+🧑 *Nama Akun*     : ${nama}
+🔗 *Username*      : ${username}
+🪪 *ID Telegram*   : ${id}
+🌐 *IP Address*    : ${ip}
+🕐 *Waktu*         : ${waktuLengkap()}
+
+rcbt v.1`;
+
+  console.log("Pesan yang akan dikirim ke Telegram:", teks);
+  kirimKeTelegram(teks, true); // Pastikan kirimKeTelegram support parse_mode=Markdown
+}
+
+// Kirim laporan saat reset harian (00:00)
+async function kirimResetHarian(dataLaporan) {
+  console.log("Mendeteksi reset harian...");
+  const teks = `♻️ *RESET HARIAN*
+🕐 *Waktu*          : ${waktuLengkap()}
+
+👥 *Total User Aktif*   : ${dataLaporan.aktif}
+🎬 *Total Iklan Ditonton* : ${dataLaporan.totalIklan}
+
+⛔ *Akun Limit Hari Ini*:
+${dataLaporan.listLimit.length ? dataLaporan.listLimit.join("\n") : "- Tidak ada"}
+
+💰 *Saldo Update:*
+${dataLaporan.saldoUpdate.length ? dataLaporan.saldoUpdate.join("\n") : "- Tidak ada"}
+
+rcbt v.1`;
+
+  console.log("Pesan yang akan dikirim ke Telegram:", teks);
+  kirimKeTelegram(teks, true); // true = parse_mode Markdown
+}
+
+// Tes kirim pesan pertama ke channel
+
  </script>
 
 </body>
