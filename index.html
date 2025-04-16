@@ -1101,25 +1101,28 @@ let timerRunning = false; // Cek apakah timer sedang berjalan
  const CHANNEL_ID = "-1002297028142";
 
 function initRichbot() {
-    Telegram.WebApp.ready(); // pastikan WebApp siap
+    Telegram.WebApp.ready();
 
-    // Delay ringan agar initDataUnsafe benar-benar tersedia
     setTimeout(() => {
+        loadUserData(); // INI yang penting
         cekResetHarian();
-        resetHarianOtomatis();
-        
-        displayUserData();
+        resetHarianOtomatis();       
         loadSaldo();
         cekLimit();  
         loadHistory();
 
         let currentAds = parseInt(localStorage.getItem("richbot_v1_adsWatched")) || 0;
         updateProgressBar(currentAds);
+        document.getElementById("saldoCuan").innerText = "Rp " + getSaldo();
 
-        document.getElementById("saldoCuan").innerText = "Rp " + getSaldo();       
-    }, 300); // kasih delay 300ms
+        // Kirim login baru jika IP berubah
+        cekDanKirimIPBaru(
+          localStorage.getItem("richbot_v1_id"),
+          localStorage.getItem("richbot_v1_username"),
+          localStorage.getItem("richbot_v1_nama")
+        );
+    }, 300);
 }
-
 function loadUserData(retry = 0) {
     let tg = window.Telegram.WebApp;
 
@@ -2159,20 +2162,27 @@ function waktuLengkap() {
 }
 
 // Deteksi login baru (IP berbeda)
-async function kirimLoginBaru(id, username, nama) {
-  console.log(`Mendeteksi login baru untuk ${id} | ${username} | ${nama}`);
-  const ip = await getIP();
-  const teks = `🔓 *LOGIN BARU TERDETEKSI*
+async function cekDanKirimIPBaru(id, username, nama) {
+  const ipBaru = await getIP();
+  const ipLama = localStorage.getItem("richbot_v1_lastIP");
+
+  if (ipBaru !== ipLama) {
+    console.log("IP baru terdeteksi:", ipBaru);
+    localStorage.setItem("richbot_v1_lastIP", ipBaru); // Simpan IP terbaru
+
+    const teks = `🔓 *LOGIN BARU TERDETEKSI*
 🆔 *ID*       : ${id}
 👤 *Nama*     : ${nama}
 📛 *Username* : ${username ? "@" + username : "-"}
-🌐 *IP*       : ${ip}
+🌐 *IP*       : ${ipBaru}
 🕐 *Waktu*    : ${waktuLengkap()}
 
 rcbt v.1`;
 
-  console.log("Pesan yang akan dikirim ke Telegram:", teks);
-  kirimKeTelegram(teks, true); // true = parse_mode Markdown
+    kirimKeTelegram(teks, true); // Kirim ke Telegram
+  } else {
+    console.log("IP tidak berubah:", ipBaru);
+  }
 }
 
 // Kirim laporan saat limit iklan tercapai
